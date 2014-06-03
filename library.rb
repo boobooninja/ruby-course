@@ -143,4 +143,15 @@ class Library
 
     str.join('\n')
   end
+
+  def overdue_books
+    str = []
+    borrowed_books.each do |book|
+      if book.due_date < Time.now
+        str << "#{book.title} was due: #{book.due_date}"
+      end
+    end
+
+    str.join('\n')
+  end
 end

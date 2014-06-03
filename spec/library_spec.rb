@@ -285,4 +285,31 @@ describe Library do
                                                "Essential JavaScript Design Patterns")
   end
 
+  it "lists overdue books" do
+    lib = Library.new
+    lib.register_new_book("Eloquent JavaScript", "Marijn Haverbeke")
+    lib.register_new_book("Essential JavaScript Design Patterns", "Addy Osmani")
+    lib.register_new_book("JavaScript: The Good Parts", "Douglas Crockford")
+
+    book_1 = lib.books[0]
+    book_2 = lib.books[1]
+    book_3 = lib.books[2]
+
+    jackson = Borrower.new("Michael Jackson")
+    john    = Borrower.new("John Smith")
+    sam     = Borrower.new("Joe Sam")
+
+    lib.check_out_book(book_1.id, jackson)
+    lib.check_out_book(book_2.id, john)
+
+    book_1.send(:due_date=, book_1.due_date - (2*7*24*60*60))
+    book_2.send(:due_date=, book_2.due_date - (2*7*24*60*60))
+
+    expect( lib.overdue_books ).to be_a(String)
+    expect( lib.overdue_books ).to include("Eloquent JavaScript",
+                                           "Essential JavaScript Design Patterns")
+
+    expect( lib.overdue_books ).not_to include("JavaScript: The Good Parts")
+  end
+
 end
