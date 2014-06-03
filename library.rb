@@ -1,7 +1,10 @@
 class Book
-  attr_reader :author, :title, :id, :status, :year_published, :edition, :reviews, :check_out_date
+  attr_reader :author, :title, :id, :status,
+              :year_published, :edition, :reviews,
+              :check_out_date, :due_date
 
-  def initialize(title, author, status = 'available', id = nil, year_published=nil, edition=nil)
+  def initialize(title, author, status = 'available',
+                 id = nil, year_published=nil, edition=nil)
     @author         = author
     @title          = title
     @status         = status
@@ -10,12 +13,15 @@ class Book
     @edition        = edition
     @reviews        = [ ]
     @check_out_date = nil
+    @due_date       = nil
   end
 
   def check_out
     if @status == 'available'
       @status = 'checked_out'
-      @check_out_date = Time.new
+      time = Time.new
+      @check_out_date = time
+      @due_date = time + 1*7*24*60*60
       true
     elsif @status == 'checked_out'
       false
@@ -26,6 +32,7 @@ class Book
     if @status == 'checked_out'
       @status = 'available'
       @check_out_date = nil
+      @due_date = nil
       true
     elsif @status == 'available'
       false
@@ -40,6 +47,10 @@ class Book
 
   def check_out_date=(date)
     @check_out_date = date
+  end
+
+  def due_date=(date)
+    @due_date = date
   end
 end
 
@@ -57,7 +68,7 @@ class Borrower
 
   def initialize(name)
     @name  = name
-    @books = [ ]
+    @books = { }
   end
 
   def has_two_books?
@@ -65,7 +76,7 @@ class Borrower
   end
 
   def has_late_books?
-    late_book = @books.find {|book| Time.now > (book.check_out_date + (1*7*24*60*60))}
+    late_book = @books.find {|id,book| Time.now > book.due_date}
     late_book != nil
   end
 end
@@ -91,8 +102,8 @@ class Library
     @books.each do |book|
       if book.id == book_id && book.status == 'available'
         book.check_out
-        @borrowers[book_id] = borrower.name
-        borrower.books << book
+        @borrowers[book_id] = borrower
+        borrower.books[book.id] = book
         return book
       end
     end
@@ -101,14 +112,16 @@ class Library
   end
 
   def get_borrower(book_id)
-    @borrowers[book_id]
+    @borrowers[book_id].name
   end
 
   def check_in_book(a_book)
     @books.each do |book|
       if book.id == a_book.id
         book.check_in
-        @borrowers.delete a_book.id
+        borrower = @borrowers[book.id]
+        @borrowers.delete book.id
+        borrower.books.delete(book.id)
         return true
       end
     end
@@ -120,5 +133,14 @@ class Library
 
   def borrowed_books
     @books.select {|book| book.status == 'checked_out'}
+  end
+
+  def display_borrowers
+    str = []
+    borrowed_books.each do |book|
+      str << "#{get_borrower(book.id)} checked out #{book.id}, #{book.title} and is due: #{book.due_date}"
+    end
+
+    str.join('\n')
   end
 end

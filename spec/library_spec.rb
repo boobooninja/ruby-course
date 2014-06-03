@@ -18,6 +18,7 @@ describe Book do
     expect(@book.year_published).to be_nil
     expect(@book.edition).to be_nil
     expect(@book.check_out_date).to be_nil
+    expect(@book.due_date).to be_nil
   end
 
   it "starts with an empty array of reviews" do
@@ -64,9 +65,9 @@ describe Borrower do
     expect(borrower.name).to eq "Mike"
   end
 
-  it "starts with an empty array of books" do
+  it "starts with an empty hash of books" do
     borrower = Borrower.new("Mike")
-    expect(borrower.books).to eq([])
+    expect(borrower.books).to eq({})
   end
 end
 
@@ -199,8 +200,8 @@ describe Library do
 
     # The first book should check out fine
     book = lib.check_out_book(book_1.id, jackson)
-    book.send(:check_out_date=, book.check_out_date - (2*7*24*60*60))
-    expect(book.check_out_date).to be < book.check_out_date + (1*7*24*60*60)
+    book.send(:due_date=, book.due_date - (2*7*24*60*60))
+    expect(book.due_date).to be < Time.now
 
     # However, the second should return nil
     book = lib.check_out_book(book_2.id, jackson)
@@ -259,4 +260,29 @@ describe Library do
     expect(lib.borrowed_books.count).to eq(1)
     expect(lib.borrowed_books.first).to be_a(Book)
   end
+
+  it "lists the borrowers and thier checked out books" do
+    lib = Library.new
+    lib.register_new_book("Eloquent JavaScript", "Marijn Haverbeke")
+    lib.register_new_book("Essential JavaScript Design Patterns", "Addy Osmani")
+    lib.register_new_book("JavaScript: The Good Parts", "Douglas Crockford")
+
+    book_1 = lib.books[0]
+    book_2 = lib.books[1]
+    book_3 = lib.books[2]
+
+    jackson = Borrower.new("Michael Jackson")
+    john    = Borrower.new("John Smith")
+    sam     = Borrower.new("Joe Sam")
+
+    lib.check_out_book(book_1.id, jackson)
+    lib.check_out_book(book_2.id, john)
+
+    expect( lib.display_borrowers ).to be_a(String)
+    expect( lib.display_borrowers ).to include("Michael Jackson",
+                                               "John Smith",
+                                               "Eloquent JavaScript",
+                                               "Essential JavaScript Design Patterns")
+  end
+
 end
