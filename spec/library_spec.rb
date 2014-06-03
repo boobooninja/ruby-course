@@ -14,6 +14,16 @@ describe Book do
     expect(@book.id).to be_nil
   end
 
+  it "defaults year_published, check_out_date and edition to nil" do
+    expect(@book.year_published).to be_nil
+    expect(@book.edition).to be_nil
+    expect(@book.check_out_date).to be_nil
+  end
+
+  it "starts with an empty array of reviews" do
+    expect(@book.reviews).to eq([])
+  end
+
   it "has a default status of available" do
     expect(@book.status).to eq 'available'
   end
@@ -22,6 +32,7 @@ describe Book do
     did_it_work = @book.check_out
     expect(did_it_work).to be_true
     expect(@book.status).to eq 'checked_out'
+    expect(@book.check_out_date).to be_a(Time)
   end
 
   it "can't be checked out twice in a row" do
@@ -38,6 +49,12 @@ describe Book do
     @book.check_out
     @book.check_in
     expect(@book.status).to eq 'available'
+    expect(@book.check_out_date).to be_nil
+  end
+
+  it "can be reviewed" do
+    @book.review(5, 'This is awesome')
+    expect(@book.reviews.first.rating).to eq(5)
   end
 end
 
@@ -46,12 +63,18 @@ describe Borrower do
     borrower = Borrower.new("Mike")
     expect(borrower.name).to eq "Mike"
   end
+
+  it "starts with an empty array of books" do
+    borrower = Borrower.new("Mike")
+    expect(borrower.books).to eq([])
+  end
 end
 
 describe Library do
-  it "starts with an empty array of books" do
+  it "starts with an empty array of books and empty hash of borrowers" do
     lib = Library.new
     expect(lib.books.count).to eq(0)
+    expect(lib.borrowers.count).to eq(0)
   end
 
   it "add new books and assigns it an id" do
@@ -141,26 +164,45 @@ describe Library do
     expect(book.status).to eq 'available'
   end
 
-  it "does not allow a Borrower to check out more than one Book at any given time" do
+  it "does not allow a Borrower to check out more than two Books at any given time" do
     # yeah it's a stingy library
     lib = Library.new
     lib.register_new_book("Eloquent JavaScript", "Marijn Haverbeke")
     lib.register_new_book("Essential JavaScript Design Patterns", "Addy Osmani")
-    # lib.register_new_book("JavaScript: The Good Parts", "Douglas Crockford")
+    lib.register_new_book("JavaScript: The Good Parts", "Douglas Crockford")
 
     jackson = Borrower.new("Michael Jackson")
     book_1 = lib.books[0]
     book_2 = lib.books[1]
-    # book_3 = lib.books[2]
+    book_3 = lib.books[2]
 
     # The first two books should check out fine
     book = lib.check_out_book(book_1.id, jackson)
     expect(book.title).to eq "Eloquent JavaScript"
 
-    # book = lib.check_out_book(book_2.id, jackson)
-    # expect(book.title).to eq "Essential JavaScript Design Patterns"
+    book = lib.check_out_book(book_2.id, jackson)
+    expect(book.title).to eq "Essential JavaScript Design Patterns"
 
     # However, the third should return nil
+    book = lib.check_out_book(book_2.id, jackson)
+    expect(book).to be_nil
+  end
+
+  it "does not allow a Borrower to check out another Book if they have a late book" do
+    lib = Library.new
+    lib.register_new_book("Eloquent JavaScript", "Marijn Haverbeke")
+    lib.register_new_book("Essential JavaScript Design Patterns", "Addy Osmani")
+
+    jackson = Borrower.new("Michael Jackson")
+    book_1 = lib.books[0]
+    book_2 = lib.books[1]
+
+    # The first book should check out fine
+    book = lib.check_out_book(book_1.id, jackson)
+    book.send(:check_out_date=, book.check_out_date - (2*7*24*60*60))
+    expect(book.check_out_date).to be < book.check_out_date + (1*7*24*60*60)
+
+    # However, the second should return nil
     book = lib.check_out_book(book_2.id, jackson)
     expect(book).to be_nil
   end
