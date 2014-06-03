@@ -312,4 +312,22 @@ describe Library do
     expect( lib.overdue_books ).not_to include("JavaScript: The Good Parts")
   end
 
+  it "allows a Borrower to schedule a future check out" do
+    lib = Library.new
+    lib.register_new_book("Eloquent JavaScript", "Marijn Haverbeke")
+    lib.register_new_book("Essential JavaScript Design Patterns", "Addy Osmani")
+
+    book_1 = lib.books[0]
+    book_2 = lib.books[1]
+
+    jackson = Borrower.new("Michael Jackson")
+    john    = Borrower.new("John Smith")
+
+    lib.check_out_book(book_1.id, jackson)
+
+    lib.reserve_book(book_1.id, john)
+
+    expect( lib.reservations[book_1.id] ).to eq(john)
+  end
+
 end

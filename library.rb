@@ -82,13 +82,14 @@ class Borrower
 end
 
 class Library
-  attr_reader :books, :borrowers
+  attr_reader :books, :borrowers, :reservations
 
   @@book_ids = 0
 
   def initialize
     @books     = []
     @borrowers = {}
+    @reservations = {}
   end
 
   def register_new_book(title, author)
@@ -153,5 +154,9 @@ class Library
     end
 
     str.join('\n')
+  end
+
+  def reserve_book(book_id, borrower)
+    @reservations[book_id] = borrower
   end
 end
