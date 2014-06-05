@@ -14,7 +14,11 @@ class Bar
   end
 
   def happy_hour?
+    hour = Time.now.hour
+    minute = Time.now.min
 
+    hour >= 15 && hour < 16 ||
+    hour == 16 && minute == 0
   end
 
   def happy_discount
