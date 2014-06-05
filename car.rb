@@ -12,4 +12,7 @@ class Car
 end
 
 class BigRig < Car
+  def honk
+    "BBBBBRRRRRRAAAAAWWWHHHHH"
+  end
 end
