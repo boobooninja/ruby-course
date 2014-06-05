@@ -96,18 +96,24 @@ describe Bar do
   end
 
   describe '#get_price' do
-    it "returns the price for the given drink name" do
-      @bar.add_menu_item('Cosmo', 5.40)
+    context "During normal hours" do
+      # TODO: WRITE TESTS TO ENSURE BAR KNOWS NOT TO DISCOUNT
+      it "returns the price for the given drink name" do
+        @bar.add_menu_item('Cosmo', 5.40)
 
-      expect(@bar.get_price('Cosmo')).to eq(5.40)
+        expect(@bar.get_price('Cosmo')).to eq(5.40)
+      end
     end
-  end
 
-  context "During normal hours" do
-    # TODO: WRITE TESTS TO ENSURE BAR KNOWS NOT TO DISCOUNT
-  end
+    context "During happy hours" do
+      # TODO: WRITE TESTS TO ENSURE BAR DISCOUNTS DURING HAPPY HOUR
+      it "returns the discounted price for the given drink name" do
+        @bar.add_menu_item('Cosmo', 5.40)
 
-  context "During happy hours" do
-    # TODO: WRITE TESTS TO ENSURE BAR DISCOUNTS DURING HAPPY HOUR
+        Time.stub(:now).and_return(Time.new(2014,01,01,15,10))
+
+        expect(@bar.get_price('Cosmo')).to eq(5.40 / 2)
+      end
+    end
   end
 end

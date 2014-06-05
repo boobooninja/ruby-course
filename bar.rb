@@ -36,7 +36,9 @@ class Bar
   end
 
   def get_price(name)
-    menu_items.find {|item| item.name == name}.price
+    drink = menu_items.find {|item| item.name == name}
+
+    happy_hour? ? drink.price / 2 : drink.price
   end
 end
 
