@@ -5,10 +5,19 @@ class Bar
 
   def initialize(name)
     @name       = name
-    @menu_items = { }
+    @menu_items = [ ]
   end
 
   def add_menu_item(name, price)
-    menu_items[name] = price
+    menu_items << MenuItem.new(name, price)
+  end
+end
+
+class MenuItem
+  attr_reader :name, :price
+
+  def initialize(name, price)
+    @name  = name
+    @price = price
   end
 end
