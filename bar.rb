@@ -34,6 +34,10 @@ class Bar
                         discount
                       end
   end
+
+  def get_price(name)
+    menu_items.find {|item| item.name == name}.price
+  end
 end
 
 class MenuItem

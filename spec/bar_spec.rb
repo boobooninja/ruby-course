@@ -95,6 +95,14 @@ describe Bar do
     end
   end
 
+  describe '#get_price' do
+    it "returns the price for the given drink name" do
+      @bar.add_menu_item('Cosmo', 5.40)
+
+      expect(@bar.get_price('Cosmo')).to eq(5.40)
+    end
+  end
+
   context "During normal hours" do
     # TODO: WRITE TESTS TO ENSURE BAR KNOWS NOT TO DISCOUNT
   end
