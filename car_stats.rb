@@ -8,8 +8,8 @@ class CarStats
   end
 
   def self.car_hash(cars)
-    # cars.each_with_object(Hash.new(0)) do |car,count|
-    #   count[car.color] += 1
+    # cars.each_with_object(Hash.new(0)) do |car,hash|
+    #   hash[car.color] += 1
     # end
 
     cars.inject(Hash.new(0)) do |hash, car|
