@@ -1,2 +1,2 @@
-require 'pry-byebug'
+# require 'pry-byebug'
 require './lucky.rb'

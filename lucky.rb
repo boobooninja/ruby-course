@@ -13,8 +13,26 @@
 # Such tickets were either eaten after being used
 # or collected for bragging rights.
 #
-# Read the tests carefully and ake them pass.
+# Read the tests carefully and make them pass.
 #
 # Credit to SundaySalsa on codewars.com for coming
 # up with this problem.
 
+class Lucky
+  def self.check(str)
+    raise :error if str.size == 0
+    rts = str.scan(/[a-zA-Z]|\s/)
+    raise :error if rts.size > 0
+
+    digits = str.scan(/\d/)
+    x = digits.size / 2
+
+    y, z = digits[0..x-1], digits[-x..-1]
+
+    [y,z].each do |a|
+      a.map! {|b| b.to_i}
+    end
+
+    y.inject(:+) == z.inject(:+)
+  end
+end
