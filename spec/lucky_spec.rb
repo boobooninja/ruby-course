@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Lucky do
-  describe 
+  describe
   it 'should return true' do
     str = '287935'
     response = Lucky.check(str)
