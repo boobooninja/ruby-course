@@ -1,0 +1,30 @@
+<div class="row employees">
+  <div class="large-12 medium-12 column">
+    <div class="row">
+      <div class="large-12 medium-12 column">
+        <h2>Employees</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12  medium-12 column">
+        <a class="right" href="#">New Employee</a>
+        <table>
+          <thead>
+            <tr>
+              <th class="id" width="20%">ID</th>
+              <th class="name" width="80%">NAME</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @employees.each do |employee| %>
+              <tr class="employee-listing">
+                <td class="id"><%= employee[:id] %></td>
+                <td class="name"><%= employee[:name] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
