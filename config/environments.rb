@@ -4,3 +4,8 @@ if ENV['APP_ENV'] == 'development'
 else
   Honkr.db = Honkr::Databases::InMemory.new
 end
+
+ActiveRecord::Base.establish_connection(
+  :adapter => 'postgresql',
+  :database => 'honkr'
+)
