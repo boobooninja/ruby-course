@@ -139,9 +139,9 @@ shared_examples "a database" do
 end
 
 
-# describe DoubleDog::Database::InMemory do
-#   it_behaves_like "a database"
-# end
+describe DoubleDog::Database::InMemory do
+  it_behaves_like "a database"
+end
 
 describe DoubleDog::Database::SQL do
   it_behaves_like "a database"

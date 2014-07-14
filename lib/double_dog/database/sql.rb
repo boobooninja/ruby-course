@@ -36,9 +36,12 @@ module DoubleDog
       end
 
       def get_user(id)
-        ar_user = User.find(id)
-        return nil if ar_user.nil?
-        DoubleDog::User.new(ar_user.id, ar_user.username, ar_user.password, ar_user.admin)
+        begin
+          ar_user = User.find(id)
+          DoubleDog::User.new(ar_user.id, ar_user.username, ar_user.password, ar_user.admin)
+        rescue Exception => e
+          nil
+        end
       end
 
       def create_session(attrs)
