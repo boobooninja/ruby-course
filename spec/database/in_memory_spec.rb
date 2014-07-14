@@ -1,7 +1,20 @@
 require 'spec_helper'
 
-describe DoubleDog::Database::InMemory do
+shared_examples "a database" do
   let(:db) { described_class.new }
+
+  before(:each) do
+    db.clear_everything
+  end
+
+  it "clears everything" do
+    db.create_user(:username => 'alice', :password => 'pass1')
+    db.create_item(name: 'hot dog', price: 5)
+    expect(db.get_user(1)).to eq(nil)
+    expect(db.all_items.count).to eq(1)
+    db.clear_everything
+    expect(db.all_items.count).to eq(0)
+  end
 
   it "creates a user" do
     user = db.create_user(:username => 'alice', :password => 'pass1')
@@ -102,7 +115,8 @@ describe DoubleDog::Database::InMemory do
     retrieved_order = db.get_order(order.id)
     expect(retrieved_order).to be_a DoubleDog::Order
     expect(retrieved_order.employee_id).to eq(emp.id)
-    expect(retrieved_order.items).to include(item_1, item_2, item_3)
+    expect(retrieved_order.items.first.id).to eq(item_1.id)
+    expect(retrieved_order.items.last.id).to eq(item_3.id)
   end
 
   it "grabs all orders" do
@@ -122,4 +136,13 @@ describe DoubleDog::Database::InMemory do
     expect(orders.map &:employee_id).to include(emp_1.id, emp_2.id, emp_3.id)
     expect(orders.first.items.count).to be >= 2
   end
+end
+
+
+# describe DoubleDog::Database::InMemory do
+#   it_behaves_like "a database"
+# end
+
+describe DoubleDog::Database::SQL do
+  it_behaves_like "a database"
 end

@@ -22,6 +22,7 @@ module DoubleDog
 
       def get_user(id)
         attrs = @users[id]
+        return nil if attrs.nil?
         User.new(attrs[:id], attrs[:username], attrs[:password], attrs[:admin])
       end
 
@@ -78,6 +79,17 @@ module DoubleDog
         @orders.values.map do |attrs|
           Order.new(attrs[:id], attrs[:employee_id], attrs[:items])
         end
+      end
+
+      def clear_everything
+        @users = {}
+        @users_id_counter = 100
+        @sessions = {}
+        @sessions_id_counter = 100
+        @items = {}
+        @item_id_counter = 500
+        @orders = {}
+        @order_id_counter = 600
       end
     end
   end
