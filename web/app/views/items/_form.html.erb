@@ -1,0 +1,9 @@
+<%= form_tag("/items", method: "post") do %>
+  <%= label_tag('item[name]', "Name:") %>
+  <%= text_field_tag('item[name]') %><br>
+
+  <%= label_tag('item[price]', "Price:") %>
+  <%= text_field_tag('item[price]') %><br>
+
+  <%= submit_tag("submit") %>
+<% end %>
