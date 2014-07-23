@@ -1,6 +1,3 @@
-require 'active_record'
-require 'pg'
-
 module DoubleDog
   module Database
     class SQL

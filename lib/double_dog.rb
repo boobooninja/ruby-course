@@ -1,4 +1,7 @@
 require 'pry-byebug'
+require 'active_record'
+require 'active_record_tasks'
+require 'pg'
 
 module DoubleDog
   def self.db
