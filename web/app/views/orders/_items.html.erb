@@ -1,0 +1,6 @@
+    <% fields_for "order[item_attributes][]", item do |item_form| %>
+      <div class="field">
+        <%= item_form.label :name %><br>
+        <%= item_form.text_field :name %>
+      </div>
+    <% end %>

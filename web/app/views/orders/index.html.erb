@@ -1,0 +1,10 @@
+<h1>Listing orders</h1>
+
+<% @orders.each do |order| %>
+  <p>Order ID: <%= order.id %></p>
+  <p>Employee ID: <%= order.employee_id %></p>
+<% end %>
+
+<br>
+
+<%= link_to 'New Order', new_order_path %>

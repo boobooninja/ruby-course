@@ -8,10 +8,16 @@ class UsersController < ApplicationController
     @users = DoubleDog::Database::SQL::User.all
   end
 
-  # # GET /users/1
-  # # GET /users/1.json
-  # def show
-  # end
+  # GET /users/1
+  # GET /users/1.json
+  def show
+    response = DoubleDog::FindUser.new.run( params[:id] )
+    if response[:user]
+      @user = response[:user]
+    else
+      redirect_to :index
+    end
+  end
 
   # # GET /users/new
   # def new
@@ -26,7 +32,7 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     if @user = DoubleDog::CreateAccount.new.run(user_params)
-      redirect_to @user, notice: 'User was successfully created.'
+      redirect_to "/users/index", notice: 'User was successfully created.'
     else
       render :new
     end
@@ -67,14 +73,25 @@ class UsersController < ApplicationController
   #   end
   # end
 
+  def orders
+    response = DoubleDog::FindOrderByUser.new.run( params.merge(session_id: session[:remember_token]) )
+    if response[:orders]
+      @orders = response[:orders]
+      render 'orders/index'
+    else
+      redirect_to "/users/#{params[:id]}"
+    end
+  end
+
+
   private
-    # # Use callbacks to share common setup or constraints between actions.
-    # def set_user
-    #   @user = User.find(params[:id])
-    # end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_user
+      @user = User.find(params[:id])
+    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:username, :password, :admin)
+      params.require(:user).permit(:username, :password, :admin).merge(session_id: session[:remember_token])
     end
 end

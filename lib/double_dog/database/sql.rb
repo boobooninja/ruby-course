@@ -81,11 +81,12 @@ module DoubleDog
       def create_order(attrs)
         ar_order = Order.create(employee_id: attrs[:employee_id])
         items = []
-        attrs[:items].each do |item|
-          ar_item = OrderItem.create(order_id: ar_order.id, item_id: item.id)
+        attrs[:items].each do |item_id|
+          ar_item = OrderItem.create(order_id: ar_order.id, item_id: item_id)
           # items.push( DoubleDog::Item.new(item.id, item.name, item.price) )
         end
-        DoubleDog::Order.new(ar_order.id, ar_order.employee_id, attrs[:items])
+        items = self.send(:get_order_items, ar_order.id)
+        DoubleDog::Order.new(ar_order.id, ar_order.employee_id, items)
       end
 
       def get_order(id)

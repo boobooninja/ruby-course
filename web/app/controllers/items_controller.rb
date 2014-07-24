@@ -25,11 +25,19 @@ class ItemsController < ApplicationController
   # POST /items
   # POST /items.json
   def create
-    if @item = DoubleDog::CreateItem.new.run(item_params)
-      redirect_to @item, notice: 'Item was successfully created.'
+    # if @item = DoubleDog::CreateItem.new.run(item_params)
+    #   redirect_to @item, notice: 'Item was successfully created.'
+    # else
+    #   render :new
+    # end
+
+    response = DoubleDog::CreateItem.new.run(item_params)
+    if response[:item]
+      redirect_to '/items', notice: 'Item was successfully created.'
     else
       render :new
     end
+
 
     # @item = Item.new(item_params)
 
@@ -76,6 +84,6 @@ class ItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_params
-      params.require(:item).permit(:name, :price)
+      params.require(:item).permit(:name, :price).merge(session_id: session[:remember_token])
     end
 end

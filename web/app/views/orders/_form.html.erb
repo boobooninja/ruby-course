@@ -1,0 +1,26 @@
+<%= form_tag '/orders', method: :post do %>
+
+  <!-- List available items -->
+  <div class="available-items">
+  <% @items.each do |item| %>
+    <a href="#" data-id="<%= item.id %>"><%= item.name %></a>
+  <% end %>
+  </div>
+
+  <!-- Show selected items -->
+  <ul class="selected-items"></ul>
+
+  <input type="submit">
+<% end %>
+
+<script type="text/javascript">
+  $('.available-items a').on('click', function(e) {
+    e.preventDefault();
+    var itemID = $(this).attr('data-id');
+    console.log("itemID", itemID);
+    var li = $('<li>').text( $(this).text() );
+    var input = $('<input type="hidden" name="order[items][]">').val(itemID);
+    li.append(input);
+    $('.selected-items').append(li);
+  })
+</script>

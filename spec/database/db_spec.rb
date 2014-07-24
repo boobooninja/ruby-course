@@ -98,7 +98,10 @@ shared_examples "a database" do
     item_3 = db.create_item(:name => 'potato', :price => 8)
     emp = db.create_user(:username => 'mitch', :password => 'pass1')
 
-    order = db.create_order(:employee_id => emp.id, :items => [item_1, item_2, item_3])
+    order = db.create_order(
+      employee_id: emp.id,
+      items: [item_1.id, item_2.id, item_3.id]
+    )
     expect(order).to be_a DoubleDog::Order
 
     expect(order.id).to_not be_nil
@@ -111,7 +114,10 @@ shared_examples "a database" do
     item_3 = db.create_item(:name => 'potato', :price => 8)
     emp = db.create_user(:username => 'mitch', :password => 'pass1')
 
-    order = db.create_order(:employee_id => emp.id, :items => [item_1, item_2, item_3])
+    order = db.create_order(
+      employee_id: emp.id,
+      items: [item_1.id, item_2.id, item_3.id]
+    )
     retrieved_order = db.get_order(order.id)
     expect(retrieved_order).to be_a DoubleDog::Order
     expect(retrieved_order.employee_id).to eq(emp.id)
@@ -127,9 +133,9 @@ shared_examples "a database" do
     emp_2 = db.create_user(:username => 'mell', :password => 'pass2')
     emp_3 = db.create_user(:username => 'donald', :password => 'pass3')
 
-    order_1 = db.create_order(:employee_id => emp_1.id, :items => [item_1, item_2, item_3])
-    order_2 = db.create_order(:employee_id => emp_2.id, :items => [item_1, item_3])
-    order_3 = db.create_order(:employee_id => emp_3.id, :items => [item_2, item_3])
+    order_1 = db.create_order(employee_id: emp_1.id, items: [item_1.id, item_2.id, item_3.id])
+    order_2 = db.create_order(employee_id: emp_2.id, items: [item_1.id, item_3.id])
+    order_3 = db.create_order(employee_id: emp_3.id, items: [item_2.id, item_3.id])
 
     orders = db.all_orders
     expect(orders.count).to eq(3)

@@ -65,8 +65,14 @@ module DoubleDog
 
       def create_order(attrs)
         new_id = (@order_id_counter += 1)
-        @orders[new_id] = attrs
         attrs[:id] = new_id
+        item_objects = []
+        attrs[:items].each do |item_id|
+          item_objects.push( get_item(item_id) )
+        end
+        attrs[:items] = item_objects
+        @orders[new_id] = attrs
+
         Order.new(attrs[:id], attrs[:employee_id], attrs[:items])
       end
 

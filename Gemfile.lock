@@ -134,5 +134,5 @@ DEPENDENCIES
   activerecord
   pg
   pry-byebug (~> 1.3.2)
-  rails
+  rails (= 4.1.4)
   rspec (~> 2.14.0)
